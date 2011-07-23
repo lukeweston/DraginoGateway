@@ -9,16 +9,19 @@ The board includes a socket for an XBee module (or any similar "Bee" module with
 Arduino-equivalent pins 2 and 3. Arduino-equivalent pins 0 and 1 are connected to the UART of the AR2317 chipset on the Dragino.
 
 The board incorporates two sensors - a light dependant resistor and a DS18B20 temperature sensor. A micro-SD card socket is also included, with the SD card's SPI
-bus connected to four of the AR2317's GPIO libraries.
+bus connected to four of the AR2317's GPIO pins.
 
-The five "+" inputs on the Dragino input terminal block are connected to the AVR's ADC input pins 1-5. (Pin 0 is used for the LDR). These inputs are connected through
-1:4 voltage dividers, meaning that they can read voltage inputs between 0-20 V, and they include additional resistors and 5.6 V Zener diodes to clamp each line, so the
-AVR is protected against overvoltages being connected on these inputs. The five "-" inputs are connected to ground.
+The five "+" inputs on the Dragino input terminal block are connected to the AVR's ADC input pins 1-5. (Pin 0 is used for the LDR). These inputs are clamped at 5V maximum, by
+the ESD suppression protection diodes installed on the Dragino board. 100 ohm resistors are included in series with each line to provide additional inrush current limiting.
+(these resistors are quite low relative to the input impedance of the AVR ADC inputs, so they do not attenuate input voltages to any noticable degree.) The five "-" inputs
+are connected to ground.
 
-The "A" and "B" terminals on the terminal block are connected to +12V and an open-collector transistor output respectively, allowing those two terminals to be connected up
-to drive a 12V relay, or any other such moderately-low-power 12V device.
+The two-pin output terminal block on the board is connected to +12V and an open-collector transistor output, allowing those two terminals to be connected up to drive a 12 V
+relay, or any other such moderately-low-power 12V device. 12V DC power is supplied to the board, along with the Dragino's regulated 5 V and 3.3 V rails, via the Dragino. 
 
-12V DC power is supplied to the board, along with the Dragino's regulated 5 V and 3.3 V rails, via the Dragino. 
+The AVR's SPI pins are connected to the microSD card's SPI bus, along with the AR2317 GPIO pins which are used to implement a SPI interface from the Dragino.
+As well as allowing OpenWRT to use the SD card for a filesystem directly, this should also make it possible to program the AVR, using the appropriate toolchain, from within
+OpenWRT.
 
 No display or touchscreen is included, because in the future we presume we will be eventually developing an Arduino GLCD shield anyway, with a dedicated on-board
 microcontroller to handle the GLCD and touchscreen, and this can just be plugged into the Arduino shield headers or something like that.
@@ -57,8 +60,5 @@ With the exception of the microSD card socket, there are no surface-mount compon
 	GPIO4			Micro-SD CS
 	
 Information about packages/drivers for SD card use with OpenWRT: http://tinyhack.com/2010/04/04/d-link-dir-300-serial-port-and-sd-mod/
-
-
-
 
 
